@@ -1,4 +1,4 @@
-from ..common import get_api_key
+from ..api_keys import get_api_key
 from .providers import ProviderAndModel, ChatResponse
 from .providers.ag_anthropic import ProviderAnthropic
 from .providers.ag_openai import ProviderOpenAI

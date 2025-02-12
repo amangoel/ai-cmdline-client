@@ -8,6 +8,7 @@ import readline
 def main():
     print('Welcome to your helpful commandline client to hosted LLM models!')
     print("Type '! h' anytime to get hints and help about how to use this tool.")
+
     while True:
         user_input = input('> ')
         user_input = user_input.strip()
