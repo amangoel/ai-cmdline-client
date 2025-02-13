@@ -1,9 +1,10 @@
 from .ag_anthropic import ProviderAnthropic
 from .ag_openai import ProviderOpenAI
+from .google_genai import ProviderGoogle
 from .xai import ProviderXAI
 
 
-AVAILABLE_PROVIDER_CLASSES = [ProviderAnthropic, ProviderOpenAI, ProviderXAI]
+AVAILABLE_PROVIDER_CLASSES = [ProviderAnthropic, ProviderGoogle, ProviderOpenAI, ProviderXAI]
 
 
 class ChatResponse:

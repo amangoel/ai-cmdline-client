@@ -10,5 +10,5 @@ setup(
             "har=har.executables.har_main:main"
         ]
     },
-    install_requires=['openai', "anthropic"]
+    install_requires=['anthropic', 'openai', 'google-genai']
 )
