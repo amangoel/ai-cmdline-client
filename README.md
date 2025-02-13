@@ -14,7 +14,7 @@ A command line client to hosted LLMs such as Anthropic/Google/OpenAI
 ```json
 {
     "Anthropic": "<anthropic-api-key>",
-    "Google": <google-api-key>,
+    "Google": "<google-api-key>",
     "OpenAI": "<openai-api-key>",
     "XAI": "<xai-api-key>"
 }
