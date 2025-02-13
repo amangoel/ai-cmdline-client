@@ -1,5 +1,5 @@
 # ai-cmdline-client
-A command line client to hosted LLMs such as OpenAI/Anthropic
+A command line client to hosted LLMs such as Anthropic/Google/OpenAI
 
 ## To install
 - Clone this repo onto the computer where one wants to install this tool
@@ -14,6 +14,7 @@ A command line client to hosted LLMs such as OpenAI/Anthropic
 ```json
 {
     "Anthropic": "<anthropic-api-key>",
+    "Google": <google-api-key>,
     "OpenAI": "<openai-api-key>",
     "XAI": "<xai-api-key>"
 }
