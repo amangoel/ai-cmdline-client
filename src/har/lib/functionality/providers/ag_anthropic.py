@@ -14,6 +14,10 @@ class ProviderAnthropic:
     def models_with_vision_capabilities(cls):
         return ['claude-3-5-sonnet-latest']
 
+    @classmethod
+    def models_with_reasoning_capabilities(cls):
+        return []
+
     def __init__(self, *, api_key: str):
         self.client = Anthropic(api_key=api_key)
 

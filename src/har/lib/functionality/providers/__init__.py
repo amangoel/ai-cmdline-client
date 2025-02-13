@@ -1,3 +1,10 @@
+from .ag_anthropic import ProviderAnthropic
+from .ag_openai import ProviderOpenAI
+from .xai import ProviderXAI
+
+
+AVAILABLE_PROVIDER_CLASSES = [ProviderAnthropic, ProviderOpenAI, ProviderXAI]
+
 
 class ChatResponse:
     def __init__(self, response_text,
@@ -26,6 +33,10 @@ class ChatResponse:
 
 
 class ImageUnderstandingResponse(ChatResponse):
+    pass
+
+
+class ReasoningPromptResponse(ChatResponse):
     pass
 
 

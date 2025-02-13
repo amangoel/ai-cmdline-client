@@ -14,6 +14,10 @@ class ProviderOpenAI:
     def models_with_vision_capabilities(cls):
         return ['gpt-4o-mini', 'gpt-4o']
 
+    @classmethod
+    def models_with_reasoning_capabilities(cls):
+        return ['o1-mini']
+
     def __init__(self, *, api_key: str, base_url=None):
         self.client = OpenAI(api_key=api_key, base_url=base_url)
 
@@ -23,4 +27,3 @@ class ProviderOpenAI:
             store=True,
             messages=messages
         )
-

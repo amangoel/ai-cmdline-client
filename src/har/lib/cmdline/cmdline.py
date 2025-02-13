@@ -1,8 +1,10 @@
-from ..functionality import CHAT, IMAGE_UNDERSTANDING
+from ..common import FUNCTIONALITY_CHAT, FUNCTIONALITY_IMAGE_UNDERSTANDING, FUNCTIONALITY_REASONING
+from ..common import FUNCTIONALITY_TO_PROMPT_SYMBOL_MAP, SUPPORTED_FUNCTIONALITY
 from ..functionality import get_default_provider_model_for, set_default_provider_model_for
 from ..functionality import get_available_functionality_and_models
 from ..functionality.chat import get_chat_response_for_single_message
 from ..functionality.image_understanding import SUPPORTED_EXTENSIONS_FOR_IMAGE_UNDERSTANDING_LOWERCASE, understand_image
+from ..functionality.reasoning import get_reasoning
 from .help import print_help
 import os.path
 import re
@@ -15,28 +17,20 @@ NEXT_PROMPT = 1
 
 def print_available_functionality_and_models():
     func_to_models_map = get_available_functionality_and_models()
-
-    prov_n_models_for_chat = func_to_models_map[CHAT]
-    default_prov_n_model_for_chat = get_default_provider_model_for(CHAT)
-    print(f'Available models for {CHAT} (symbol = ?):')
-    for i in range(len(prov_n_models_for_chat)):
-        p_n_m = prov_n_models_for_chat[i]
-        if default_prov_n_model_for_chat.provider == p_n_m.provider and \
-                default_prov_n_model_for_chat.model == p_n_m.model:
-            print(f'\t{i} {p_n_m.provider}.{p_n_m.model} (current)')
-        else:
-            print(f'\t{i} {p_n_m.provider}.{p_n_m.model}')
-
-    prov_n_models_for_i_u = func_to_models_map[IMAGE_UNDERSTANDING]
-    default_prov_n_model_for_i_u = get_default_provider_model_for(IMAGE_UNDERSTANDING)
-    print(f'Available models for {IMAGE_UNDERSTANDING} (symbol = #):')
-    for i in range(len(prov_n_models_for_i_u)):
-        p_n_m = prov_n_models_for_i_u[i]
-        if default_prov_n_model_for_i_u.provider == p_n_m.provider and \
-                default_prov_n_model_for_i_u.model == p_n_m.model:
-            print(f'\t{i} {p_n_m.provider}.{p_n_m.model} (current)')
-        else:
-            print(f'\t{i} {p_n_m.provider}.{p_n_m.model}')
+    functionalities = sorted(func_to_models_map.keys())
+    for functionality in functionalities:
+        default_prov_n_model = get_default_provider_model_for(functionality)
+        prompt_symbol = FUNCTIONALITY_TO_PROMPT_SYMBOL_MAP[functionality]
+        print(f'Available models for {functionality} (symbol = {prompt_symbol}):')
+        provider_and_models = func_to_models_map[functionality]
+        num_provider_and_models = len(provider_and_models)
+        for i in range(num_provider_and_models):
+            provider_and_model = provider_and_models[i]
+            if default_prov_n_model.provider == provider_and_model.provider and \
+                    default_prov_n_model.model == provider_and_model.model:
+                print(f'\t{i} {provider_and_model.provider}.{provider_and_model.model} (current)')
+            else:
+                print(f'\t{i} {provider_and_model.provider}.{provider_and_model.model}')
 
 
 def process_tool_command_model(tokens) -> int:
@@ -56,11 +50,12 @@ def process_tool_command_model(tokens) -> int:
     if len(tokens) < 5:
         return NOT_INVOKED
 
-    if tokens[3] == '?':
-        functionality_of_to_be_set_model = CHAT
-    elif tokens[3] == '#':
-        functionality_of_to_be_set_model = IMAGE_UNDERSTANDING
-    else:
+    functionality_of_to_be_set_model = None
+    for k, v in FUNCTIONALITY_TO_PROMPT_SYMBOL_MAP.items():
+        if v == tokens[3]:
+            functionality_of_to_be_set_model = k
+            break
+    if not functionality_of_to_be_set_model or functionality_of_to_be_set_model not in SUPPORTED_FUNCTIONALITY:
         return NOT_INVOKED
 
     try:
@@ -119,7 +114,7 @@ def process_chat_prompt(user_input: str) -> int:
         print(user_prompt)
         print('------------------------------')
 
-    provider_model = get_default_provider_model_for(CHAT)
+    provider_model = get_default_provider_model_for(FUNCTIONALITY_CHAT)
     chat_response = get_chat_response_for_single_message(provider_model, user_prompt)
     print(f'{provider_model.provider}.{provider_model.model} says ', end='')
     print(
@@ -154,7 +149,7 @@ def process_image_understanding_prompt(user_input: str) -> int:
     text_prompt = user_input[match_obj.end():].strip()
     if not text_prompt:
         return NOT_INVOKED
-    provider_model = get_default_provider_model_for(IMAGE_UNDERSTANDING)
+    provider_model = get_default_provider_model_for(FUNCTIONALITY_IMAGE_UNDERSTANDING)
     image_understanding_response = understand_image(provider_model, image_path, text_prompt)
     response_text = image_understanding_response.get_response_text()
     input_tokens_known_by_provider_as = image_understanding_response.get_input_tokens_known_by_provider_as()
@@ -166,3 +161,25 @@ def process_image_understanding_prompt(user_input: str) -> int:
     print(f'#{output_tokens_known_by_provider_as} tokens={num_output_tokens}):')
     print(response_text)
     return NEXT_PROMPT
+
+
+def process_reasoning_prompt(user_input: str) -> int:
+    tokens = user_input.split()
+    if tokens[0] != '$':
+        return NOT_INVOKED
+    if len(tokens) == 1:
+        return NOT_INVOKED
+    reasoning_prompt = user_input[len(tokens[0]):].strip()
+    provider_model = get_default_provider_model_for(FUNCTIONALITY_REASONING)
+    reasoning_response = get_reasoning(provider_model, reasoning_prompt)
+    print(f'{provider_model.provider}.{provider_model.model} says ', end='')
+    print(
+        f'(#{reasoning_response.get_input_tokens_known_by_provider_as()} tokens={reasoning_response.get_num_input_tokens()} ',
+        end=''
+    )
+    print(
+        f'#{reasoning_response.get_output_tokens_known_by_provider_as()} tokens={reasoning_response.get_num_output_tokens()}):'
+    )
+    print(reasoning_response.get_response_text())
+    return NEXT_PROMPT
+

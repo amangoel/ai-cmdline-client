@@ -1,11 +1,10 @@
 import json
 import os
 import os.path
-from .common import PROVIDER_NAME_ANTHROPIC, PROVIDER_NAME_OPENAI, PROVIDER_NAME_XAI
+from .common import SUPPORTED_PROVIDERS
 
 API_KEYS_FILE_UNDER_HOME_DIR = '.har/keys.json'
 API_KEYS = None
-SUPPORTED_PROVIDERS = [PROVIDER_NAME_ANTHROPIC, PROVIDER_NAME_OPENAI, PROVIDER_NAME_XAI]
 
 
 def read_api_keys_from_file():
