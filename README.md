@@ -19,4 +19,4 @@ A command line client to hosted LLMs such as Anthropic/Google/OpenAI
     "XAI": "<xai-api-key>"
 }
 ```
-- This tool is invoked via the executable `har`. Run `har` on the shell prompt.
+- This tool is invoked via the executable `har`. Run `har` on the shell prompt. ([Demo video](https://www.dropbox.com/scl/fi/1wv5ivvpb5ngpp80ujk4f/2024-02-13-demo-video.m4v?rlkey=mscl33ormf6zmzu6f4kc07xn4&st=wb3r66ee&dl=0))
