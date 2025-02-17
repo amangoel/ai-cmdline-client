@@ -1,5 +1,5 @@
 # ai-cmdline-client
-A command line client to hosted LLMs such as Anthropic/Google/OpenAI
+A developer tool to query hosted LLMs (e.g., Google/OpenAI) from the command line. Since developers can read stacktraces to understand why the tool broke (e.g., malformed supplied config), my primary focus is on adding functionality. I will also improve error handling with time.
 
 ## To install
 - Clone this repo onto the computer where one wants to install this tool
